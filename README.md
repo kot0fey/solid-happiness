@@ -1,5 +1,7 @@
 
 Сборка и запуск
+
+Сборка и первый запрос на http://localhost:8080/v1/visit/analyze рекомендуется делать с впн, т.к. модель для whisper загружается капризно.
 ```bash
 docker build -t visit-analyzer:base .
 docker compose up -d
@@ -15,6 +17,10 @@ curl -sS -X POST http://localhost:8080/v1/visit/analyze \
   -F "audio=@test-doctor.mp3" \
   -F "lang=ru" | jq .
 
+curl -sS -X POST http://localhost:8080/v1/visit/analyze \
+  -H "Accept: application/json" \
+  -F "audio=@test-doctor.mp3;type=audio/mpeg" \
+  -F "lang=ru" | jq .
 
 curl -sS -X POST http://localhost:8080/v1/visit/analyze-transcript \
 -H "Content-Type: application/json" \
