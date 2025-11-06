@@ -66,15 +66,8 @@ async def analyze_audio(
         lang: str = Form("ru"),
         _: bool = Depends(check_auth)
 ):
-    # ✅ Поддерживаемые MIME типы с учетом codecs
-    allowed_mime_types = {
-        "audio/mpeg", "audio/wav", "audio/x-wav", "audio/mp4", "audio/m4a",
-        "audio/aac", "audio/x-m4a", "audio/webm", "video/webm", "audio/ogg",
-        "audio/webm;codecs=opus", "video/webm;codecs=opus"
-    }
-
-    # ✅ Базовые MIME типы (без codecs) для проверки
-    base_mime_types = {
+    # ✅ Упрощенная проверка MIME типов - проверяем базовые типы
+    allowed_base_types = {
         "audio/mpeg", "audio/wav", "audio/x-wav", "audio/mp4", "audio/m4a",
         "audio/aac", "audio/x-m4a", "audio/webm", "video/webm", "audio/ogg"
     }
@@ -83,14 +76,17 @@ async def analyze_audio(
     allowed_extensions = {'.mp3', '.wav', '.m4a', '.webm', '.ogg'}
     file_extension = os.path.splitext(audio.filename.lower())[1]
 
-    # ✅ Проверяем MIME тип (включая codecs) И базовый MIME тип И расширение файла
-    is_valid_mime = (audio.content_type in allowed_mime_types or
-                     any(audio.content_type.startswith(base_type + ';') for base_type in base_mime_types))
+    # ✅ Получаем базовый MIME тип (без параметров codecs)
+    base_content_type = audio.content_type.split(';')[0].strip().lower()
 
-    if not is_valid_mime and file_extension not in allowed_extensions:
+    # ✅ Проверяем: базовый MIME тип ИЛИ расширение файла
+    is_valid_mime = base_content_type in allowed_base_types
+    is_valid_extension = file_extension in allowed_extensions
+
+    if not is_valid_mime and not is_valid_extension:
         raise HTTPException(
             status_code=415,
-            detail=f"Unsupported content type: {audio.content_type}. Supported: {', '.join(base_mime_types)}"
+            detail=f"Unsupported content type: {audio.content_type}. Supported: {', '.join(allowed_base_types)}"
         )
 
     raw = await audio.read()
