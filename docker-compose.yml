@@ -10,6 +10,7 @@ services:
       - TRANSCRIBE_IMPL=faster-whisper
       - OLLAMA_HOST=http://ollama:9902
       - OLLAMA_MODEL=mistral_nemo
+      - API_TOKEN=d8v7fhozfdhv8onvfdb
     volumes:
       - .:/code
     depends_on:
