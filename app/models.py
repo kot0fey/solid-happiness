@@ -83,3 +83,75 @@ class VisitResponse(BaseModel):
 
     class Config:
         populate_by_name = True
+
+
+
+
+
+
+# ---------------------------
+# Блок данных осмотра
+# ---------------------------
+class ExamData(BaseModel):
+    complaints: str                      # Жалобы пациента
+    anamnesis: str                       # Анамнез заболевания
+    diagnosis: str                       # Диагноз
+    treatment_plan: str                  # План лечения
+    patient_recommendations: str         # Рекомендации пациенту
+
+
+# ---------------------------
+# Показатели (виталые)
+# ---------------------------
+class Vitals(BaseModel):
+    height_cm: Optional[float]           # Рост (см)
+    weight_kg: Optional[float]           # Вес (кг)
+    bmi: Optional[float]                 # Индекс массы тела
+    waist_height_ratio: Optional[float]  # Индекс талия/рост
+    pulse: Optional[int]                 # Пульс
+    spo2: Optional[int]                  # Сатурация
+    systolic_bp: Optional[int]           # Систолическое давление
+
+
+# ---------------------------
+# Критерии качества консультации
+# ---------------------------
+class QualityCriteria(BaseModel):
+    greeting_and_contact: List[str]                         # Приветствие и установление контакта
+    conversation_structure: List[str]                       # Структура разговора
+    needs_identification: List[str]                         # Выявление потребностей
+    current_complaints_identification: List[str]            # Выявление текущих жалоб
+    disease_history: List[str]                              # Анамнез заболевания
+    general_medical_history: List[str]                      # Общий медицинский анамнез
+    medication_history: List[str]                           # Лекарственный анамнез
+    family_history: List[str]                               # Семейный анамнез
+    prevention_and_risk_control: List[str]                  # Профилактика и контроль факторов риска
+    treatment_planning: List[str]                           # Планирование лечения
+    visit_closure: List[str]                                # Заключение визита
+
+
+# ---------------------------
+# Качество обследования
+# ---------------------------
+class ExaminationQuality(BaseModel):
+    overall_score: Optional[float]          # Общая оценка
+    criteria_completed: Optional[int]       # Критериев выполнено
+    criteria_total: Optional[int]           # Всего критериев
+
+
+# ---------------------------
+# СППВР
+# ---------------------------
+class ClinicalDecisionSupport(BaseModel):
+    quality_criteria: QualityCriteria       # Критерии качества
+    examination_quality: ExaminationQuality # Качество обследования
+    dialogue_analytics: List[str]           # Аналитика диалога
+
+
+# ---------------------------
+# Основная модель ответа backend
+# ---------------------------
+class BackendResponse(BaseModel):
+    exam_data: ExamData
+    vitals: Vitals
+    clinical_decision_support: ClinicalDecisionSupport

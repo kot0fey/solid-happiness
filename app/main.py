@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import ValidationError
 from typing import List
 
-from .models import TranscriptSegmentIn, VisitResponse
+from .models import TranscriptSegmentIn, VisitResponse, BackendResponse
 from .extractor import build_protocol_from_segments
 from .quality import score_quality
 from .transcription import transcribe_audio
@@ -44,6 +44,7 @@ async def analyze_audio(
     segments: List[TranscriptSegmentIn] = [TranscriptSegmentIn(text=text, start=0, end=0, speaker="")]
     protocol = build_protocol_from_segments(segments)
     quality = score_quality(segments, protocol)
+    # return BackendResponse(None, None, None)
     return VisitResponse(protocol=protocol, quality=quality)
 
 @app.exception_handler(ValidationError)
