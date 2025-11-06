@@ -5,11 +5,11 @@ services:
     build: .
     container_name: visit_analyzer_app
     ports:
-      - "8080:8080"
+      - "9901:8080"
     environment:
       - TRANSCRIBE_IMPL=faster-whisper
-      - OLLAMA_HOST=http://ollama:11434
-      - OLLAMA_MODEL=llama3.1
+      - OLLAMA_HOST=http://ollama:9902
+      - OLLAMA_MODEL=mistral_nemo
     volumes:
       - .:/code
     depends_on:
@@ -17,9 +17,9 @@ services:
 
   ollama:
     image: ollama/ollama:latest
-    container_name: ollama
+    container_name: visit_analyzer_ollama
     ports:
-      - "11434:11434"
+      - "9902:11434"
     volumes:
       - ollama_data:/root/.ollama
     restart: unless-stopped
