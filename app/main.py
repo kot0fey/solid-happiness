@@ -29,6 +29,7 @@ security = HTTPBearer()
 
 EXPECTED_TOKEN = os.getenv("API_TOKEN", "your-token")  # можно задать через переменную окружения
 
+
 def check_auth(credentials: HTTPAuthorizationCredentials = Depends(security)):
     if credentials.scheme.lower() != "bearer":
         raise HTTPException(status_code=401, detail="Invalid auth scheme")
@@ -47,8 +48,8 @@ def check_auth(credentials: HTTPAuthorizationCredentials = Depends(security)):
     response_model_by_alias=True
 )
 async def analyze_transcript(
-    segments: List[TranscriptSegmentIn],
-    _: bool = Depends(check_auth)
+        segments: List[TranscriptSegmentIn],
+        _: bool = Depends(check_auth)
 ):
     protocol = build_protocol_from_segments(segments)
     quality = score_quality(segments, protocol)
@@ -61,13 +62,36 @@ async def analyze_transcript(
     response_model_by_alias=True
 )
 async def analyze_audio(
-    audio: UploadFile = File(..., description=".mp3|.wav|.m4a, ≤30 мин, ≤100 МБ"),
-    lang: str = Form("ru"),
-    _: bool = Depends(check_auth)
+        audio: UploadFile = File(..., description=".mp3|.wav|.m4a|.webm|.ogg, ≤30 мин, ≤100 МБ"),
+        lang: str = Form("ru"),
+        _: bool = Depends(check_auth)
 ):
-    allowed = {"audio/mpeg", "audio/wav", "audio/x-wav", "audio/mp4", "audio/m4a", "audio/aac", "audio/x-m4a"}
-    if audio.content_type not in allowed:
-        raise HTTPException(status_code=415, detail=f"Unsupported content type: {audio.content_type}")
+    # ✅ Поддерживаемые MIME типы с учетом codecs
+    allowed_mime_types = {
+        "audio/mpeg", "audio/wav", "audio/x-wav", "audio/mp4", "audio/m4a",
+        "audio/aac", "audio/x-m4a", "audio/webm", "video/webm", "audio/ogg",
+        "audio/webm;codecs=opus", "video/webm;codecs=opus"
+    }
+
+    # ✅ Базовые MIME типы (без codecs) для проверки
+    base_mime_types = {
+        "audio/mpeg", "audio/wav", "audio/x-wav", "audio/mp4", "audio/m4a",
+        "audio/aac", "audio/x-m4a", "audio/webm", "video/webm", "audio/ogg"
+    }
+
+    # ✅ Дополнительная проверка по расширению файла
+    allowed_extensions = {'.mp3', '.wav', '.m4a', '.webm', '.ogg'}
+    file_extension = os.path.splitext(audio.filename.lower())[1]
+
+    # ✅ Проверяем MIME тип (включая codecs) И базовый MIME тип И расширение файла
+    is_valid_mime = (audio.content_type in allowed_mime_types or
+                     any(audio.content_type.startswith(base_type + ';') for base_type in base_mime_types))
+
+    if not is_valid_mime and file_extension not in allowed_extensions:
+        raise HTTPException(
+            status_code=415,
+            detail=f"Unsupported content type: {audio.content_type}. Supported: {', '.join(base_mime_types)}"
+        )
 
     raw = await audio.read()
     ensure_max_duration_and_size(raw_bytes=raw, filename=audio.filename)
