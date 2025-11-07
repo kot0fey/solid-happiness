@@ -7,7 +7,7 @@ docker build -t visit-analyzer:base .
 docker compose up -d
 docker exec visit_analyzer_app apt update
 docker exec visit_analyzer_app apt install -y ffmpeg
-docker exec ollama ollama run mistral_nemo
+docker exec visit_analyzer_ollama ollama run mistral-nemo
 ```
 
 Тестовые запросы

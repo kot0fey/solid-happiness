@@ -93,11 +93,11 @@ class VisitResponse(BaseModel):
 # Блок данных осмотра
 # ---------------------------
 class ExamData(BaseModel):
-    complaints: str                      # Жалобы пациента
-    anamnesis: str                       # Анамнез заболевания
-    diagnosis: str                       # Диагноз
-    treatment_plan: str                  # План лечения
-    patient_recommendations: str         # Рекомендации пациенту
+    complaints: Optional[str]                      # Жалобы пациента
+    anamnesis: Optional[str]                       # Анамнез заболевания
+    diagnosis: Optional[str]                       # Диагноз
+    treatment_plan: Optional[str]                  # План лечения
+    patient_recommendations: Optional[str]         # Рекомендации пациенту
 
 
 # ---------------------------
