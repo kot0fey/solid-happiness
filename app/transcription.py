@@ -1,6 +1,6 @@
 import whisperx
 from typing import List, Dict
-import torch
+from whisperx.diarize import DiarizationPipeline
 
 
 def transcribe_audio(raw_bytes: bytes, lang: str) -> List[Dict]:
@@ -26,7 +26,7 @@ def transcribe_audio(raw_bytes: bytes, lang: str) -> List[Dict]:
     result = model.transcribe(file_path, language=lang)
 
     # ✅ Диаризация — работает на CPU автоматически
-    diarize_model = whisperx.DiarizationPipeline(
+    diarize_model = DiarizationPipeline(
         model_name="pyannote/speaker-diarization-3.1",
         device=device,
         use_auth_token=False
