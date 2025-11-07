@@ -61,7 +61,7 @@ def call_llm(prompt: str) -> str:
         status = result_data.get("status")
         result_text = result_data.get("result")
 
-        if status == "done" and result_text is not None:
+        if status == "completed" and result_text is not None:
             return result_text.strip()
 
         time.sleep(2)
