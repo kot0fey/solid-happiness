@@ -17,7 +17,7 @@ def transcribe_audio(raw_bytes: bytes, lang: str) -> List[Dict]:
 
     # ✅ Загружаем ASR модель (Whisper large-v2)
     model = whisperx.load_model(
-        "large-v2",
+        "base",
         device=device,
         compute_type=compute_type,
     )
