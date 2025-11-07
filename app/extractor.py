@@ -38,28 +38,39 @@ def build_protocol_from_segments(segments: List[TranscriptSegmentIn]) -> Dict:
             "waist_height_ratio": None,
             "pulse": None,
             "spo2": spo2,
-            "systolic_bp": bp
+            "systolic_bp": bp  # оставляем строкой "120/80"
         },
         "clinical_decision_support": {
             "quality_criteria": {
-                "greeting_and_contact": [],
-                "conversation_structure": [],
-                "needs_identification": [],
-                "current_complaints_identification": [],
-                "disease_history": [],
-                "general_medical_history": [],
-                "medication_history": [],
-                "family_history": [],
-                "prevention_and_risk_control": [],
-                "treatment_planning": [],
-                "visit_closure": []
+                "greeting_and_contact": 0,
+                "conversation_structure": 0,
+                "needs_identification": 0,
+                "current_complaints_identification": 0,
+                "disease_history": 0,
+                "general_medical_history": 0,
+                "medication_history": 0,
+                "family_history": 0,
+                "prevention_and_risk_control": 0,
+                "treatment_planning": 0,
+                "visit_closure": 0
             },
             "examination_quality": {
                 "overall_score": None,
                 "criteria_completed": None,
                 "criteria_total": None
             },
-            "dialogue_analytics": []
+            "dialogue_analytics": {
+                "doctor_showed_empathy": 0,
+                "doctor_interrupted_patient": 0,
+                "patient_asked_questions": 0,
+                "doctor_used_medical_jargon": 0,
+                "doctor_confirmed_understanding": 0,
+                "lifestyle_discussed": 0,
+                "allergies_discussed": 0,
+                "shared_decision_making": 0,
+                "patient_compliance_assessment": 0,
+                "doctor_pacing": 0
+            }
         }
     }
 
