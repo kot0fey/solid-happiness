@@ -24,7 +24,6 @@ services:
               capabilities: [ gpu ]
     networks:
       - visit_net
-      -
   visit-ollama:
     image: ollama/ollama:latest
     container_name: visit_analyzer_ollama
