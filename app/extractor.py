@@ -1,6 +1,5 @@
 from typing import List, Dict
-from .models import TranscriptSegmentIn, Protocol, QualityCriteria, ExaminationQuality, DialogueAnalytics, Vitals, \
-    ExamData
+from .models import TranscriptSegmentIn, Protocol
 from .normalization import (
     parse_height_cm, parse_weight_kg, parse_spo2,
     parse_bp_systolic, calc_bmi
@@ -245,35 +244,8 @@ def build_protocol_from_segments(segments: List[TranscriptSegmentIn]) -> Dict:
         print(prompt)
         llm_out = call_llm(prompt)
         parsed = json.loads(llm_out)
-
-        # ---------------------------
-        # Обновляем exam_data
-        # ---------------------------
-        if "exam_data" in parsed:
-            protocol.exam_data = ExamData(**parsed["exam_data"])
-
-        # ---------------------------
-        # Обновляем vitals
-        # ---------------------------
-        if "vitals" in parsed:
-            protocol.vitals = Vitals(**parsed["vitals"])
-
-        # ---------------------------
-        # Обновляем clinical_decision_support
-        # ---------------------------
-        if "quality_criteria" in parsed:
-            qc = QualityCriteria(**parsed["quality_criteria"])
-            protocol.clinical_decision_support.quality_criteria = qc
-
-        if "examination_quality" in parsed:
-            eq = ExaminationQuality(**parsed["examination_quality"])
-            protocol.clinical_decision_support.examination_quality = eq
-
-        if "dialogue_analytics" in parsed:
-            da = DialogueAnalytics(**parsed["dialogue_analytics"])
-            protocol.clinical_decision_support.dialogue_analytics = da
-
-    except Exception as e:
-        print(f"Ошибка при разборе LLM: {e}")
+        protocol.update({k: v for k, v in parsed.items() if k in protocol})
+    except Exception:
+        pass
 
     return protocol
