@@ -11,6 +11,7 @@ services:
       - OLLAMA_HOST=http://visit_analyzer_ollama:11434
       - OLLAMA_MODEL=mistral-nemo
       - API_TOKEN=d8v7fhozfdhv8onvfdb
+      - HF_TOKEN=
     volumes:
       - .:/code
     deploy:
