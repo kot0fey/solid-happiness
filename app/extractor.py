@@ -261,6 +261,20 @@ def build_protocol_from_segments(segments: List[TranscriptSegmentIn]) -> Dict:
             if "dialogue_analytics" in parsed:
                 cds["dialogue_analytics"].update(parsed.pop("dialogue_analytics"))
 
+        dialogue = cds["dialogue_analytics"]
+        criteria_total = 10
+        criteria_completed = sum(dialogue.values())
+        overall_score = round((criteria_completed / criteria_total) * 5, 1)
+
+        cds["examination_quality"] = {
+            "overall_score": overall_score,
+            "criteria_completed": criteria_completed,
+            "criteria_total": criteria_total
+        }
+
+        print(f"overall score: {overall_score}")
+        print(f"criteria completed: {criteria_completed}")
+        print(f"criteria total: {criteria_total}")
         deep_update(protocol, parsed)
     except Exception as e:
         print(f"Ошибка при парсинге LLM: {e}")
