@@ -66,7 +66,7 @@ def build_protocol_from_segments(segments: List[TranscriptSegmentIn]) -> Dict:
 
     try:
         joined = "\n".join(f"{s.speaker}: {s.text}" for s in segments)
-        prompt = """
+        prompt = f"""
 # ЗАДАЧА
 Проанализируй транскрипцию и выведи ЕДИНЫЙ валидный JSON-объект.
 
@@ -181,15 +181,15 @@ def build_protocol_from_segments(segments: List[TranscriptSegmentIn]) -> Dict:
 ТЫ НЕ ИМЕЕШЬ ПРАВА МОДИФИЦИРОВАТЬ ФОРМУ ВЫВОДА, СТРОГО СЛЕДУЙ ЕЁ СТРУКТУРЕ БЕЗ ВНЕСЕНИЯ ЛЮБЫХ ИЗМЕНЕНИЙ КРОМЕ ЗАПОЛНЕНИЯ ПЛЕСХОЛДЕРОВ
 НЕ ДОБАВЛЯЙ ТРАНСКРИБАЦИЮ К СВОЕМУ ВЫВОДУ
 ПРАВИЛО ВЫВОДА: <> - обозначение плейсхолдера, его не должно быть в выводимой тобой схеме, заполни их соответствующим контентом
-{
-    "exam_data": {                      // Данные медицинского осмотра
+{{
+    "exam_data": {{                      // Данные медицинского осмотра
         "complaints": "<жалобы>",                 // Жалобы пациента
         "anamnesis": "<анамнез>",                  // Анамнез заболевания и сопутствующие сведения
         "diagnosis": "<диагноз>",                  // Предварительный или окончательный диагноз
         "treatment_plan": "<план лечения>",             // План лечения
         "patient_recommendations": "<рекомендации>"     // Рекомендации пациенту
-  },
-    "vitals": {
+  }},
+    "vitals": {{
         "height_cm": <рост>,
         "weight_kg": <вес>,
         "bmi": <ИМТ>,
@@ -197,8 +197,8 @@ def build_protocol_from_segments(segments: List[TranscriptSegmentIn]) -> Dict:
         "pulse": <пульс>,
         "spo2": <сатурация>,
         "systolic_bp": <систолическое арт. давление>
-  },
-    "quality_criteria": {             // Критерии качества консультации
+  }},
+    "quality_criteria": {{             // Критерии качества консультации
         "greeting_and_contact": <0/3>,
         "conversation_structure": <0/4>,
         "needs_identification": <0/2>,
@@ -210,8 +210,8 @@ def build_protocol_from_segments(segments: List[TranscriptSegmentIn]) -> Dict:
         "prevention_and_risk_control": <0/3>,
         "treatment_planning": <0/3>,
         "visit_closure": <0/3>
-    },
-    "dialogue_analytics": {
+    }},
+    "dialogue_analytics": {{
         "doctor_showed_empathy": <0/1>,
         "doctor_interrupted_patient": <0/1>,
         "patient_asked_questions": <0/1>,
@@ -222,13 +222,14 @@ def build_protocol_from_segments(segments: List[TranscriptSegmentIn]) -> Dict:
         "shared_decision_making" <0/1>,
         "patient_compliance_assessment" <0/1>,
         "doctor_pacing" <0/1>
-    }
-}
+    }}
+}}
 
 ---
 
 # Текст диалога
-        """ + joined
+{joined}
+        """
         print(prompt)
         llm_out = call_llm(prompt)
         parsed = json.loads(llm_out)
