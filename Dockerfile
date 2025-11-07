@@ -1,4 +1,5 @@
-FROM nvidia/cuda:12.3.2-cudnn9-runtime-ubuntu22.04
+#FROM nvidia/cuda:12.3.2-cudnn9-runtime-ubuntu22.04
+FROM pytorch/pytorch:2.8.0-cuda12.9-cudnn9-runtime
 # System deps
 RUN apt-get update && apt-get install -y \
     python3-pip python3 \
@@ -19,6 +20,7 @@ WORKDIR /code
 
 COPY requirements.txt .
 RUN pip3 install --no-cache-dir -r requirements.txt
+ENV LD_LIBRARY_PATH=/opt/conda/lib/python3.11/site-packages/nvidia/cudnn/lib:/opt/conda/lib/python3.11/site-packages/ctranslate2.libs:$LD_LIBRARY_PATH
 
 COPY app ./app
 
