@@ -7,6 +7,15 @@ from .normalization import (
 from .llm import call_llm
 import json
 
+def deep_update(d: dict, u: dict):
+    """Рекурсивно обновляет словарь d значениями из u"""
+    for k, v in u.items():
+        if isinstance(v, dict) and k in d and isinstance(d[k], dict):
+            deep_update(d[k], v)
+        else:
+            d[k] = v
+
+
 def build_protocol_from_segments(segments: List[TranscriptSegmentIn]) -> Dict:
     text_all = " ".join(s.text for s in segments)
 
@@ -244,8 +253,8 @@ def build_protocol_from_segments(segments: List[TranscriptSegmentIn]) -> Dict:
         print(prompt)
         llm_out = call_llm(prompt)
         parsed = json.loads(llm_out)
-        protocol.update({k: v for k, v in parsed.items() if k in protocol})
-    except Exception:
-        pass
+        deep_update(protocol, parsed)
+    except Exception as e:
+        print(f"Ошибка при парсинге LLM: {e}")
 
     return protocol
