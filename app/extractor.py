@@ -261,6 +261,9 @@ def build_protocol_from_segments(segments: List[TranscriptSegmentIn]) -> Dict:
                 cds["quality_criteria"].update(parsed.pop("quality_criteria"))
             if "dialogue_analytics" in parsed:
                 cds["dialogue_analytics"].update(parsed.pop("dialogue_analytics"))
+        vitals = parsed.get("vitals", {})
+        if "systolic_bp" in vitals and vitals["systolic_bp"] is not None:
+            vitals["systolic_bp"] = str(vitals["systolic_bp"])
 
         dialogue = cds["dialogue_analytics"]
         criteria_total = 10
