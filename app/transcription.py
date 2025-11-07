@@ -13,7 +13,7 @@ def transcribe_audio(raw_bytes: bytes, lang: str) -> List[Dict]:
     device = "cuda" if torch.cuda.is_available() else "cpu"
     print("Using device:", device)
     # 2. Загружаем модель ASR
-    model = whisperx.load_model("large-v2", device=device)
+    model = whisperx.load_model("large-v2", device="cpu")
 
     # 3. Распознаём речь
     result = model.transcribe(file_path, language=lang)
