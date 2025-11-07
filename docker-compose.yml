@@ -15,7 +15,13 @@ services:
       - .:/code
     depends_on:
       - ollama
-
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [ gpu ]
   ollama:
     image: ollama/ollama:latest
     container_name: visit_analyzer_ollama
@@ -24,6 +30,13 @@ services:
     volumes:
       - ollama_data:/root/.ollama
     restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [ gpu ]
 
 volumes:
   ollama_data:

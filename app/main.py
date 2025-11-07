@@ -6,7 +6,7 @@ from pydantic import ValidationError
 from typing import List
 import os
 
-from .models import TranscriptSegmentIn, VisitResponse
+from .models import TranscriptSegmentIn, VisitResponse, BackendResponse
 from .extractor import build_protocol_from_segments
 from .quality import score_quality
 from .transcription import transcribe_audio
@@ -58,7 +58,7 @@ async def analyze_transcript(
 
 @app.post(
     "/v1/visit/analyze",
-    response_model=VisitResponse,
+    response_model=BackendResponse,
     response_model_by_alias=True
 )
 async def analyze_audio(
@@ -104,8 +104,10 @@ async def analyze_audio(
     ]
 
     protocol = build_protocol_from_segments(segments)
-    quality = score_quality(segments, protocol)
-    return VisitResponse(protocol=protocol, quality=quality)
+    # quality = score_quality(segments, protocol)
+    # return VisitResponse(protocol=protocol, quality=quality)
+
+    return BackendResponse(exam_data=protocol.get("exam_data"),vitals=protocol.get("vitals"), clinical_decision_support=protocol.get("clinical_decision_support"))
 
 
 # -------------------------
