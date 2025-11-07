@@ -12,6 +12,6 @@ def transcribe_audio(raw_bytes: bytes, lang: str) -> List[Dict]:
 
     result = model.transcribe(file_path, language=lang)
     f.close()
-
+    print(result)
     return result.get("text")
 

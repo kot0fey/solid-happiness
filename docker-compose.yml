@@ -8,7 +8,7 @@ services:
       - "8803:8080"
     environment:
       - TRANSCRIBE_IMPL=faster-whisper
-      - OLLAMA_HOST=http://ollama:9902
+      - OLLAMA_HOST=http://127.0.0.1:9902
       - OLLAMA_MODEL=mistral-nemo
       - API_TOKEN=d8v7fhozfdhv8onvfdb
     volumes:
