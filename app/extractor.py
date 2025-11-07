@@ -228,39 +228,9 @@ def build_protocol_from_segments(segments: List[TranscriptSegmentIn]) -> Dict:
 ---
 
 # Текст диалога
-        """
-        diarized_text = call_llm("""представь текст в таком формате
-         {
-    "transcription": [
-        {
-            "end": 3.991,
-            "text": " Затылки в основном.",
-            "start": 0.31,
-            "speaker": "SPEAKER_00"
-        },
-        {
-            "end": 5.411,
-            "text": "Раньше такое было?",
-            "start": 4.031,
-            "speaker": "SPEAKER_01"
-        },
-        {
-            "end": 9.472,
-            "text": "Бывало.",
-            "start": 5.491,
-            "speaker": "SPEAKER_00"
-        },
-        {
-            "end": 12.373,
-            "text": "А с чем связываете сами?",
-            "start": 9.532,
-            "speaker": "SPEAKER_01"
-        }
-        ]
-        }
-         """ + joined)
+        """ + joined
 
-        llm_out = call_llm(prompt + diarized_text)
+        llm_out = call_llm(prompt)
         parsed = json.loads(llm_out)
         protocol.update({k: v for k, v in parsed.items() if k in protocol})
     except Exception:

@@ -8,9 +8,10 @@ services:
       - "8803:8080"
     environment:
       - TRANSCRIBE_IMPL=faster-whisper
-      - OLLAMA_HOST=http://visit_analyzer_ollama:11434
+      - OLLAMA_HOST=https://speech-analytics.qitch.ru/api/v1/prompt/generate
       - OLLAMA_MODEL=mistral-nemo
       - API_TOKEN=d8v7fhozfdhv8onvfdb
+      - QITCH_API_KEY=
     volumes:
       - .:/code
     deploy:
