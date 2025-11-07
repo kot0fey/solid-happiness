@@ -228,8 +228,9 @@ def build_protocol_from_segments(segments: List[TranscriptSegmentIn]) -> Dict:
 ---
 
 # Текст диалога
-        """ + joined
-        llm_out = call_llm(prompt)
+        """
+        diarized_text = call_llm("Сделай диаризацию текста" + joined)
+        llm_out = call_llm(prompt + diarized_text)
         parsed = json.loads(llm_out)
         protocol.update({k: v for k, v in parsed.items() if k in protocol})
     except Exception:
