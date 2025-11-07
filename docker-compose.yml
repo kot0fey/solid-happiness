@@ -8,13 +8,13 @@ services:
       - "8803:8080"
     environment:
       - TRANSCRIBE_IMPL=faster-whisper
-      - OLLAMA_HOST=http://127.0.0.1:9902
+      - OLLAMA_HOST=http://visit-ollama:9902
       - OLLAMA_MODEL=mistral-nemo
       - API_TOKEN=d8v7fhozfdhv8onvfdb
     volumes:
       - .:/code
     depends_on:
-      - ollama
+      - visit-ollama
     deploy:
       resources:
         reservations:
@@ -22,7 +22,10 @@ services:
             - driver: nvidia
               count: all
               capabilities: [ gpu ]
-  ollama:
+    networks:
+      - visit_net
+      -
+  visit-ollama:
     image: ollama/ollama:latest
     container_name: visit_analyzer_ollama
     ports:
@@ -37,6 +40,12 @@ services:
             - driver: nvidia
               count: all
               capabilities: [ gpu ]
+    networks:
+      - visit_net
 
 volumes:
   ollama_data:
+
+networks:
+  visit_net:
+    driver: bridge
