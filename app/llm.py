@@ -5,7 +5,10 @@ import logging
 OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://localhost:11434")
 OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3.1")
 logger = logging.getLogger("LLM Client")
-
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s"
+)
 def call_llm(prompt: str) -> str:
     url = f"{OLLAMA_HOST}/api/generate"
     resp = requests.post(
