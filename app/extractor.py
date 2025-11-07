@@ -253,6 +253,14 @@ def build_protocol_from_segments(segments: List[TranscriptSegmentIn]) -> Dict:
         print(prompt)
         llm_out = call_llm(prompt)
         parsed = json.loads(llm_out)
+        # Перемещаем вложенные блоки в правильное место
+        if "quality_criteria" in parsed or "dialogue_analytics" in parsed:
+            cds = protocol["clinical_decision_support"]
+            if "quality_criteria" in parsed:
+                cds["quality_criteria"].update(parsed.pop("quality_criteria"))
+            if "dialogue_analytics" in parsed:
+                cds["dialogue_analytics"].update(parsed.pop("dialogue_analytics"))
+
         deep_update(protocol, parsed)
     except Exception as e:
         print(f"Ошибка при парсинге LLM: {e}")
