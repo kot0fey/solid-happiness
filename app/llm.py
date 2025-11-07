@@ -1,6 +1,5 @@
 import os
 import requests
-import logging
 
 OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://localhost:11434")
 OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3.1")
@@ -12,10 +11,10 @@ def call_llm(prompt: str) -> str:
         json={"model": OLLAMA_MODEL, "prompt": prompt, "stream": False},
         timeout=120,
     )
-    print(prompt)
-    print(resp.json())
+
 
     resp.raise_for_status()
     data = resp.json()
-
+    print(prompt)
+    print(resp.json())
     return data.get("response", "").strip()

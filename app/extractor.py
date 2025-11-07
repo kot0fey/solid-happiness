@@ -277,7 +277,9 @@ def build_protocol_from_segments(segments: List[TranscriptSegmentIn]) -> Dict:
 {joined}
         """
         llm_out = call_llm(prompt)
+        print(prompt)
         parsed = json.loads(llm_out)
+        print(json.dumps(parsed))
         protocol.update({k: v for k, v in parsed.items() if k in protocol})
     except Exception:
         pass
