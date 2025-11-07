@@ -89,6 +89,7 @@ class VisitResponse(BaseModel):
 
 
 
+
 # ---------------------------
 # Блок данных осмотра
 # ---------------------------
@@ -110,24 +111,24 @@ class Vitals(BaseModel):
     waist_height_ratio: Optional[float]  # Индекс талия/рост
     pulse: Optional[int]                 # Пульс
     spo2: Optional[int]                  # Сатурация
-    systolic_bp: Optional[int]           # Систолическое давление
+    systolic_bp: Optional[str]           # Систолическое давление (строка "120/80")
 
 
 # ---------------------------
 # Критерии качества консультации
 # ---------------------------
 class QualityCriteria(BaseModel):
-    greeting_and_contact: List[str]                         # Приветствие и установление контакта
-    conversation_structure: List[str]                       # Структура разговора
-    needs_identification: List[str]                         # Выявление потребностей
-    current_complaints_identification: List[str]            # Выявление текущих жалоб
-    disease_history: List[str]                              # Анамнез заболевания
-    general_medical_history: List[str]                      # Общий медицинский анамнез
-    medication_history: List[str]                           # Лекарственный анамнез
-    family_history: List[str]                               # Семейный анамнез
-    prevention_and_risk_control: List[str]                  # Профилактика и контроль факторов риска
-    treatment_planning: List[str]                           # Планирование лечения
-    visit_closure: List[str]                                # Заключение визита
+    greeting_and_contact: int
+    conversation_structure: int
+    needs_identification: int
+    current_complaints_identification: int
+    disease_history: int
+    general_medical_history: int
+    medication_history: int
+    family_history: int
+    prevention_and_risk_control: int
+    treatment_planning: int
+    visit_closure: int
 
 
 # ---------------------------
@@ -140,12 +141,28 @@ class ExaminationQuality(BaseModel):
 
 
 # ---------------------------
-# СППВР
+# Аналитика диалога
+# ---------------------------
+class DialogueAnalytics(BaseModel):
+    doctor_showed_empathy: int
+    doctor_interrupted_patient: int
+    patient_asked_questions: int
+    doctor_used_medical_jargon: int
+    doctor_confirmed_understanding: int
+    lifestyle_discussed: int
+    allergies_discussed: int
+    shared_decision_making: int
+    patient_compliance_assessment: int
+    doctor_pacing: int
+
+
+# ---------------------------
+# СППВР (Clinical Decision Support)
 # ---------------------------
 class ClinicalDecisionSupport(BaseModel):
     quality_criteria: QualityCriteria       # Критерии качества
     examination_quality: ExaminationQuality # Качество обследования
-    dialogue_analytics: List[str]           # Аналитика диалога
+    dialogue_analytics: DialogueAnalytics   # Аналитика диалога
 
 
 # ---------------------------
