@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y \
 RUN pip3 install --upgrade pip
 
 # ✅ PyTorch 2.5.1 + CUDA 12.4 + cuDNN 9
-RUN pip3 install torch==2.5.1 torchvision==0.20.1 torchaudio==2.5.1 --index-url https://download.pytorch.org/whl/cu124
+RUN pip3 install torch==2.5.1 torchaudio==2.5.1 --index-url https://download.pytorch.org/whl/cu124
 
 # ✅ WhisperX + Pyannote
 RUN pip3 install whisperx pyannote.audio

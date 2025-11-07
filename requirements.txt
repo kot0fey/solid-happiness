@@ -3,5 +3,6 @@ uvicorn
 requests~=2.32.3
 pydantic~=2.8.2
 pydub~=0.25.1
+transformers==4.33.2
 
 
