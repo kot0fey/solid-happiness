@@ -12,6 +12,8 @@ def call_llm(prompt: str) -> str:
         json={"model": OLLAMA_MODEL, "prompt": prompt, "stream": False},
         timeout=120,
     )
+    print(prompt)
+    print(resp.json())
 
     resp.raise_for_status()
     data = resp.json()
