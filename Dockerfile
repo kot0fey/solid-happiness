@@ -1,33 +1,27 @@
-FROM python:3.11-bullseye
+FROM nvidia/cuda:12.1.1-runtime-ubuntu22.04
 
-# ----- системные зависимости -----
+# System deps
 RUN apt-get update && apt-get install -y \
-    ffmpeg \
-    git \
-    libavcodec-dev \
-    libavformat-dev \
-    libavdevice-dev \
-    libavfilter-dev \
-    libswscale-dev \
-    libswresample-dev \
-    pkg-config \
+    python3-pip python3 \
+    ffmpeg git pkg-config \
+    libavcodec-dev libavformat-dev libavdevice-dev \
+    libavfilter-dev libswscale-dev libswresample-dev \
     && rm -rf /var/lib/apt/lists/*
+
+RUN pip3 install --upgrade pip
+
+# Torch with CUDA 12.1
+RUN pip3 install torch==2.1.2 torchaudio==2.1.2 --index-url https://download.pytorch.org/whl/cu121
+
+# whisperx + pyannote
+RUN pip3 install whisperx pyannote.audio
 
 WORKDIR /code
 
-# ----- установка PyTorch совместимой версии -----
-# CPU/GPU выбирается автоматически
-RUN pip install --no-cache-dir torch==2.1.2 torchaudio==2.1.2 --index-url https://download.pytorch.org/whl/cpu
-
-# ----- WhisperX + pyannote -----
-RUN pip install --no-cache-dir whisperx pyannote.audio
-
 COPY requirements.txt .
-
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip3 install --no-cache-dir -r requirements.txt
 
 COPY app ./app
 
 EXPOSE 8080
-
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080", "--log-level", "info"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]
