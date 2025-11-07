@@ -229,7 +229,7 @@ def build_protocol_from_segments(segments: List[TranscriptSegmentIn]) -> Dict:
 
 # Текст диалога
         """ + joined
-
+        print(prompt)
         llm_out = call_llm(prompt)
         parsed = json.loads(llm_out)
         protocol.update({k: v for k, v in parsed.items() if k in protocol})
