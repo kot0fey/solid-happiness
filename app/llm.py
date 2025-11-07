@@ -29,7 +29,8 @@ def call_llm(prompt: str) -> str:
         "content": (None, prompt),
         "model": (None, MODEL),
         "prompt_name": (None, PROMPT_NAME),
-        "options": (None, json.dumps(options))
+        "options": (None, json.dumps(options)),
+        "format": (None, "json")
     }
 
     resp = requests.post(API_URL, headers=headers, files=files, timeout=300)
