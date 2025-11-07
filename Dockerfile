@@ -9,8 +9,8 @@ RUN apt-get update && apt-get install -y \
 
 RUN pip3 install --upgrade pip
 
-# ✅ PyTorch 2.3 + CUDA 12.3 + cuDNN 9
-RUN pip3 install torch==2.3.0 torchaudio==2.3.0 --index-url https://download.pytorch.org/whl/cu123
+# ✅ PyTorch 2.5.1 + CUDA 12.4 + cuDNN 9
+RUN pip3 install torch==2.5.1 torchvision==0.20.1 torchaudio==2.5.1 --index-url https://download.pytorch.org/whl/cu124
 
 # ✅ WhisperX + Pyannote
 RUN pip3 install whisperx pyannote.audio
@@ -23,4 +23,5 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 COPY app ./app
 
 EXPOSE 8080
+
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]
