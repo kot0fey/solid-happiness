@@ -27,7 +27,7 @@ def transcribe_audio(raw_bytes: bytes, lang: str) -> List[Dict]:
 
     # ✅ Диаризация — работает на CPU автоматически
     diarize_model = DiarizationPipeline(
-        model_name="pyannote/speaker-diarization-3.1",
+        model_name="pyannote/segmentation",
         device=device,
         use_auth_token=False
     )
