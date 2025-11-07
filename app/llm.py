@@ -1,11 +1,9 @@
 import os
 import requests
 import json
-import time
 
 API_URL = "https://speech-analytics.qitch.ru/api/v1/prompt/generate"
-RESULT_URL = "https://speech-analytics.qitch.ru/api/v1/prompt/result"
-API_KEY = os.getenv("QITCH_API_KEY", "1234")
+API_KEY = os.getenv("QITCH_API_KEY", "1234")  # как в curl
 
 MODEL = os.getenv("QITCH_MODEL", "mistral-nemo:latest")
 PROMPT_NAME = os.getenv("PROMPT_NAME", "medtech-test")
@@ -15,6 +13,7 @@ def call_llm(prompt: str) -> str:
         "X-Authorization": API_KEY
     }
 
+    # Поле options должно быть строкой
     options = {
         "num_ctx": 15000,
         "num_predict": 4048,
@@ -25,6 +24,7 @@ def call_llm(prompt: str) -> str:
         "seed": 42
     }
 
+    # multipart/form-data → передаём в `files`
     files = {
         "content": (None, prompt),
         "model": (None, MODEL),
@@ -32,30 +32,11 @@ def call_llm(prompt: str) -> str:
         "options": (None, json.dumps(options))
     }
 
-    # 1️⃣ создаём задачу
-    resp = requests.post(API_URL, headers=headers, files=files, timeout=60)
+    resp = requests.post(API_URL, headers=headers, files=files, timeout=300)
     resp.raise_for_status()
+
     data = resp.json()
-    print("LLM CREATE RESPONSE:", data)
+    print("LLM RAW RESPONSE:", data)
 
-    task_id = data["id"]
-
-    # 2️⃣ Polling — ждём результата
-    for _ in range(600):  # максимум 10 минут
-        time.sleep(1)
-
-        r = requests.get(f"{RESULT_URL}/{task_id}", headers=headers)
-        r.raise_for_status()
-        res = r.json()
-
-        status = res.get("status")
-        if status == "done":
-            print("LLM RESULT:", res)
-            return res.get("response", "")
-
-        elif status in ("failed", "error"):
-            raise RuntimeError(f"LLM failed: {res}")
-
-        # иначе status = "processing"
-
-    raise TimeoutError("LLM did not finish within timeout")
+    # API возвращает: { "response": "...", ... }
+    return data.get("response", "").strip()
