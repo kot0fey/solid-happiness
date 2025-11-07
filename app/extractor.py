@@ -227,7 +227,7 @@ def build_protocol_from_segments(segments: List[TranscriptSegmentIn]) -> Dict:
 
 ---
 
-# Не разделенный текст диалога
+# Текст диалога
         """ + joined
         llm_out = call_llm(prompt)
         parsed = json.loads(llm_out)
