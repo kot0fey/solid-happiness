@@ -5,7 +5,7 @@ from datetime import datetime
 OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://localhost:11434")
 OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3.1")
 
-LOG_FILE = "/app/llm.log"   # путь куда писать логи (можно изменить)
+LOG_FILE = "/llm.log"   # путь куда писать логи (можно изменить)
 
 def write_log(message: str):
     timestamp = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
